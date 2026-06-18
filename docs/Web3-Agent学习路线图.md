@@ -24,6 +24,17 @@
 
 **建议节奏**：每个 Layer 学到能做出对应的"里程碑产物"再往下走，不要只看不写。整条路线全程在**测试网**上做，永远不要在主网用真私钥试验 agent。
 
+**技术栈决策（主线）**
+
+本路线图采用 **TypeScript 主线 + Solidity 合约 + Python 可选扩展**：
+
+- **前端 / 操作台**：Next.js + React + TypeScript，负责钱包连接、签名确认、交易状态、任务控制台和人工审批界面。
+- **Agent / 后端应用层**：Node.js + TypeScript，负责 MCP/A2A 工具服务、链上读写、x402/AP2/AA SDK 集成、任务状态与日志。
+- **链上合约**：Solidity + Foundry，负责任务意图校验、权限边界、支付/结算相关合约与测试。
+- **Python**：暂不进入主线；只有出现 RAG、视频/音频处理、本地模型推理、训练/微调或 Python-only 成熟工具链时，再作为独立 FastAPI/worker 服务接入。
+
+这不是排斥 Python，而是避免前期同时分散在两套后端栈里。第一阶段先把 Web3 agent 的签名、权限、支付、发现和工具调用闭环跑通；需要重 AI 能力时，再把 Python 服务作为可插拔模块接进来。
+
 **成熟工具优先原则**：有官方 SDK、成熟库、公共基础设施或社区大量使用的实现时，优先使用它们；不要为了“掌握原理”而在主项目里手写协议、钱包、支付、索引、签名验证、agent loop、bundler、facilitator 等关键组件。学习时可以做最小 demo 帮助理解，但生产路径只保留经过验证的库和服务。
 
 **协议成熟度风险（重要）**
@@ -519,6 +530,7 @@ ERC-4337 session key · MCP · A2A · x402 · EIP-712/3009 · LangGraph.js ...
 
 ```
 语言:        TypeScript (+ 少量 Solidity)
+Python:      可选独立服务，仅在 RAG / 视频音频处理 / 本地推理 / 训练微调等重 AI 场景引入
 链:          Base（L2，低 gas、x402/USDC 生态成熟）测试网先行 = Base Sepolia
 合约:        Solidity + Foundry + OpenZeppelin
 链交互:      viem（前端/脚本）+ ethers v6（agent 端，你已在用）
