@@ -1,0 +1,24 @@
+{
+  "name": "agent-wallet",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Layer 4 - Agent 钱包脚本：用 permissionless.js + Pimlico 在 Base Sepolia 上跑智能账户 / session key / 赞助交易",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "create-account": "tsx src/createAccount.ts",
+    "run-task": "tsx src/runEscrowTask.ts",
+    "session-key": "tsx src/sessionKey.ts",
+    "agent": "tsx src/agent.ts"
+  },
+  "dependencies": {
+    "permissionless": "^0.2.36",
+    "viem": "^2.21.54"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "dotenv": "^16.4.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

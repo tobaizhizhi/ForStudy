@@ -9,6 +9,7 @@ import { useAccount, useChainId } from "wagmi";
 
 import { BASE_SEPOLIA, BASE_SEPOLIA_CHAIN_ID } from "@/config/chains";
 import { CONTRACTS } from "@/config/contracts";
+import { useHydrated } from "@/hooks/useHydrated";
 import { useTaskFunding } from "@/hooks/useTaskFunding";
 import { useErc20Summary, useNativeBalance, useTokenAllowance } from "@/hooks/useToken";
 import { formatTokenAmount, shortAddress } from "@/lib/format";
@@ -21,12 +22,18 @@ export function FundingPanel() {
   const canWrite = isConnected && isBaseSepolia;
   const escrow = CONTRACTS.escrow.address;
   const defaultToken = CONTRACTS.permitToken.address ?? CONTRACTS.usdc.address ?? "";
+  const hydrated = useHydrated();
   const [operatorInput, setOperatorInput] = useState("");
   const [tokenInput, setTokenInput] = useState(defaultToken);
   const [amountInput, setAmountInput] = useState("1");
   const [serviceInput, setServiceInput] = useState("research-summary");
-  const [refundAfterInput, setRefundAfterInput] = useState(() => getDefaultRefundAfterInput());
+  const [refundAfterInput, setRefundAfterInput] = useState<string | undefined>();
   const funding = useTaskFunding();
+  const hydratedRefundAfterInput = useMemo(
+    () => (hydrated ? getDefaultRefundAfterInput() : ""),
+    [hydrated],
+  );
+  const effectiveRefundAfterInput = refundAfterInput ?? hydratedRefundAfterInput;
 
   const operator = useMemo(() => parseAddress(operatorInput), [operatorInput]);
   const token = useMemo(() => parseAddress(tokenInput), [tokenInput]);
@@ -46,7 +53,11 @@ export function FundingPanel() {
     () => parseTokenAmount(amountInput, tokenDecimals),
     [amountInput, tokenDecimals],
   );
-  const refundAfter = useMemo(() => parseRefundAfter(refundAfterInput), [refundAfterInput]);
+  const refundAfter = useMemo(
+    () => parseRefundAfter(effectiveRefundAfterInput),
+    [effectiveRefundAfterInput],
+  );
+
   const validationMessages = useMemo(
     () =>
       validateFundingForm({
@@ -194,7 +205,7 @@ export function FundingPanel() {
               <Field label="refundAfter">
                 <input
                   className="h-10 w-full rounded-md border border-zinc-300 bg-zinc-50 px-3 font-mono text-sm outline-none transition focus:border-emerald-600 focus:bg-white focus:ring-2 focus:ring-emerald-100"
-                  value={refundAfterInput}
+                  value={effectiveRefundAfterInput}
                   onChange={(event) => setRefundAfterInput(event.target.value)}
                   type="datetime-local"
                 />

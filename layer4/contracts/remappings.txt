@@ -1,0 +1,2 @@
+forge-std/=../../layer2/lib/forge-std/src/
+openzeppelin-contracts/=../../layer2/lib/openzeppelin-contracts/

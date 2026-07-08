@@ -9,7 +9,8 @@ import { useAccount, useChainId } from "wagmi";
 import { BASE_SEPOLIA_CHAIN_ID } from "@/config/chains";
 import { CONTRACTS } from "@/config/contracts";
 import { useClientNonce, useEscrowStatus, useTask } from "@/hooks/useEscrow";
-import { useTaskIntent } from "@/hooks/useTaskIntent";
+import { useHydrated } from "@/hooks/useHydrated";
+import { useTaskIntent, type SignedTaskIntent } from "@/hooks/useTaskIntent";
 import { formatTaskStatus, formatUnixTimestamp, shortAddress } from "@/lib/format";
 
 const FUNDED_STATUS = 1;
@@ -25,17 +26,23 @@ type EscrowTask = readonly [
   number,
 ];
 
-export function IntentPanel() {
+export function IntentPanel({ onSigned }: { onSigned?: (signed: SignedTaskIntent) => void }) {
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
   const isBaseSepolia = chainId === BASE_SEPOLIA_CHAIN_ID;
   const canUseWallet = isConnected && isBaseSepolia;
   const escrow = CONTRACTS.escrow.address;
+  const hydrated = useHydrated();
   const [taskIdInput, setTaskIdInput] = useState("1");
-  const [deadlineInput, setDeadlineInput] = useState(() => toDatetimeLocal(defaultDeadline()));
+  const [deadlineInput, setDeadlineInput] = useState<string | undefined>();
   const [copyStatus, setCopyStatus] = useState("");
+  const hydratedDeadlineInput = useMemo(
+    () => (hydrated ? toDatetimeLocal(defaultDeadline()) : ""),
+    [hydrated],
+  );
+  const effectiveDeadlineInput = deadlineInput ?? hydratedDeadlineInput;
   const taskId = useMemo(() => parseTaskId(taskIdInput), [taskIdInput]);
-  const deadline = useMemo(() => parseDeadline(deadlineInput), [deadlineInput]);
+  const deadline = useMemo(() => parseDeadline(effectiveDeadlineInput), [effectiveDeadlineInput]);
   const escrowStatus = useEscrowStatus({
     enabled: isBaseSepolia && Boolean(escrow),
   });
@@ -89,7 +96,7 @@ export function IntentPanel() {
     }
 
     try {
-      await intent.signTaskIntent({
+      const signed = await intent.signTaskIntent({
         escrow,
         client: address,
         taskId,
@@ -98,6 +105,7 @@ export function IntentPanel() {
         deadline,
       });
       setCopyStatus("");
+      onSigned?.(signed);
     } catch {
       // The hook already stores a readable error for the UI.
     }
@@ -150,7 +158,7 @@ export function IntentPanel() {
               <input
                 className="h-10 w-full rounded-md border border-zinc-300 bg-zinc-50 px-3 font-mono text-sm outline-none transition focus:border-emerald-600 focus:bg-white focus:ring-2 focus:ring-emerald-100"
                 type="datetime-local"
-                value={deadlineInput}
+                value={effectiveDeadlineInput}
                 onChange={(event) => setDeadlineInput(event.target.value)}
               />
             </Field>

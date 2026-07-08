@@ -1,0 +1,14 @@
+[profile.default]
+src = "src"
+out = "out"
+test = "test"
+script = "script"
+# 复用 Layer 2 已经安装好的依赖（forge-std + openzeppelin-contracts），
+# 这样 layer4/contracts 不用重新 forge install 就能离线编译。
+# 自己独立开一个工程时，把它换成本地 lib：libs = ["lib"]，再 forge install。
+libs = ["../../layer2/lib"]
+solc = "0.8.24"
+optimizer = true
+optimizer_runs = 200
+
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
