@@ -1,0 +1,25 @@
+{
+  "name": "agent-wallet-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Layer 4 本地可运行练习：不用私钥、不上链，拆开学习 ERC-4337 / session key / paymaster / EIP-1271 / ERC-7702",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "demo:userop": "tsx src/01-user-operation.ts",
+    "demo:validation": "tsx src/02-validation-data.ts",
+    "demo:policy": "tsx src/03-session-policy.ts",
+    "demo:paymaster": "tsx src/04-paymaster-simulation.ts",
+    "demo:1271": "tsx src/05-eip1271.ts",
+    "demo:7702": "tsx src/06-eip7702.ts",
+    "demo:all": "tsx src/runAll.ts"
+  },
+  "dependencies": {
+    "viem": "^2.21.54"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

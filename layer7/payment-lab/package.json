@@ -1,0 +1,22 @@
+{
+  "name": "payment-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Layer 7 本地可运行练习：不联网、不付真钱、无私钥文件，拆开学习 x402 402 握手 / EIP-3009 授权校验 / 支付状态机 / 对账 / AP2 mandate / 互操作拒绝",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "demo:handshake": "tsx src/01-x402-handshake.ts",
+    "demo:verify": "tsx src/02-payment-verify.ts",
+    "demo:state": "tsx src/03-state-machine.ts",
+    "demo:recon": "tsx src/04-reconciliation.ts",
+    "demo:mandate": "tsx src/05-ap2-mandate.ts",
+    "demo:interop": "tsx src/06-interop-rejection.ts",
+    "demo:all": "tsx src/runAll.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

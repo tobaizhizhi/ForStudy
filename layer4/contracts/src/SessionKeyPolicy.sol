@@ -158,8 +158,10 @@ abstract contract SessionKeyManager {
         if (!_allowedSelector[key][selector]) return false;
 
         // 针对 approve(address,uint256) 做额度上限检查：解出金额，和该 token 的上限比。
-        // approve 的 calldata 布局：selector(4) + spender(32) + amount(32)，amount 在偏移 36。
-        if (selector == 0x095ea7b3 && innerCall.length >= 68) {
+        // approve 的 calldata 布局：selector(4) + spender(32) + amount(32)，总长必须刚好 68 字节，
+        // amount 在偏移 36。教学版本采用严格长度，避免“带尾巴”的 calldata 绕过新手的理解模型。
+        if (selector == 0x095ea7b3) {
+            if (innerCall.length != 68) return false;
             uint256 amount = _wordAt(innerCall, 36);
             if (amount > _erc20CallCap[key][target]) return false;
         }

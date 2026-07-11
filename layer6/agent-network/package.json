@@ -1,0 +1,27 @@
+{
+  "name": "agent-network",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Layer 6 真实三进程 demo：MCP server（Base Sepolia 只读工具）+ A2A agent（发布 Signed Agent Card）+ client（发现→验签→派任务）。单包多入口，用真实 @modelcontextprotocol/sdk 与 @a2a-js/sdk。",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "start:mcp": "tsx src/mcp-server.ts",
+    "start:agent": "tsx src/a2a-agent.ts",
+    "start:client": "tsx src/client.ts",
+    "start:gateway": "tsx src/gateway.ts"
+  },
+  "dependencies": {
+    "@a2a-js/sdk": "^0.3.4",
+    "@modelcontextprotocol/sdk": "^1.19.1",
+    "express": "^4.21.2",
+    "viem": "^2.21.54",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "protocol-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Layer 6 本地可运行练习：不联网、不调 SDK 网络接口、无 API key，拆开学习 Agent Card / JWS+JCS 验签 / 版本协商 / 协议路由 / 服务目录 / 互操作拒绝",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "demo:card": "tsx src/01-agent-card.ts",
+    "demo:jws": "tsx src/02-jws-jcs.ts",
+    "demo:version": "tsx src/03-version-negotiation.ts",
+    "demo:router": "tsx src/04-protocol-router.ts",
+    "demo:directory": "tsx src/05-service-directory.ts",
+    "demo:interop": "tsx src/06-interop-rejection.ts",
+    "demo:all": "tsx src/runAll.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

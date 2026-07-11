@@ -133,6 +133,8 @@ export async function buildSmartAccountClient(ownerPrivateKey: Hex) {
 - `userOperation.estimateFeesPerGas` 让 SDK 用 Pimlico 建议的 gas price。
 - `createSmartAccountClient` 返回的对象用起来**像一个普通钱包**（有 `sendTransaction`），但底层全走 UserOperation。
 
+【重要提醒】这里选的 `toSimpleSmartAccount`（SimpleAccount）是 eth-infinitism 的**最小参考账户：单 owner、没有 session key**，它的 `validateUserOp` 只做一件事——`owner == recover(签名)`。选它是为了先把「UserOp → paymaster → bundler」这条流水线讲干净。但它天生不支持下一模块的 session key。**想「用成熟 SDK + session key」，要换成模块化账户（ZeroDev Kernel 等），而不是 SimpleAccount**——这条路线会在模块 4（5.6 节）完整展开。别把「permissionless 这层」误当成 session key 的来源：session key 是**账户实现层**的能力。
+
 ### 5. 建号 + 发第一笔赞助交易
 
 `src/createAccount.ts`：

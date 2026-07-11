@@ -193,6 +193,14 @@ contract SessionKeyPolicyTest is Test {
         assertEq(vd, 1, "approve over cap must fail");
     }
 
+    function test_SessionKey_Erc20Approve_MalformedLength_Fails() public {
+        bytes memory normalApprove = abi.encodeWithSelector(APPROVE_SELECTOR, escrow, 50e18);
+        bytes memory innerWithTrailingByte = bytes.concat(normalApprove, hex"00");
+
+        uint256 vd = _validateAgentCall(address(token), 0, innerWithTrailingByte, keccak256("ap3"));
+        assertEq(vd, 1, "approve with unexpected trailing calldata must fail");
+    }
+
     // ---- 撤销 ----
 
     function test_SessionKey_Revoked_Fails() public {
